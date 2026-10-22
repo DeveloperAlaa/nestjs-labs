@@ -5,6 +5,7 @@ import {
   Get,
   NotFoundException,
   Param,
+  ParseIntPipe,
   Post,
   Put,
 } from "@nestjs/common";
@@ -52,8 +53,8 @@ export class ProductsController {
   }
 
   @Get(":id")
-  public getSingleProduct(@Param("id") id: string): TProduct {
-    const product = this.products.find((p) => p.id === parseInt(id));
+  public getSingleProduct(@Param("id", ParseIntPipe) id: number): TProduct {
+    const product = this.products.find((p) => p.id === id);
     if (!product) {
       throw new NotFoundException("Product Not Found.");
     }
@@ -75,10 +76,10 @@ export class ProductsController {
 
   @Put(":id")
   public updateProduct(
-    @Param("id") id: string,
+    @Param("id", ParseIntPipe) id: number,
     @Body() body: UpdateProductDTO,
   ): TProduct {
-    const product = this.products.find((p) => p.id === parseInt(id));
+    const product = this.products.find((p) => p.id === id);
     if (!product) {
       throw new NotFoundException("Product Not Found.");
     }
@@ -93,8 +94,8 @@ export class ProductsController {
   }
 
   @Delete(":id")
-  public deleteProduct(@Param("id") id: string): TProduct {
-    const product = this.products.find((p) => p.id === parseInt(id));
+  public deleteProduct(@Param("id", ParseIntPipe) id: number): TProduct {
+    const product = this.products.find((p) => p.id === id);
 
     if (!product) {
       throw new NotFoundException("Product Not Found.");
