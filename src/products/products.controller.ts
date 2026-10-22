@@ -9,6 +9,9 @@ import {
   Put,
 } from "@nestjs/common";
 
+import { Req, Res } from "@nestjs/common";
+import type { Request, Response } from "express";
+
 import type { CreateProductDTO } from "./DTOs/create-product.dto";
 import type { UpdateProductDTO } from "./DTOs/update-product.dto";
 
@@ -101,5 +104,20 @@ export class ProductsController {
 
     this.products.splice(productIndex, 1);
     return product;
+  }
+
+  // Access Express.js req, res objects
+  @Post("/express")
+  public createProducExpress(
+    @Req() req: Request<{}, {}, { name: string; price: number }>,
+    @Res() res: Response,
+  ) {
+    const newProduct: TProduct = {
+      id: this.products.length + 1,
+      name: req.body.name,
+      price: req.body.price,
+    };
+
+    res.status(201).json(newProduct);
   }
 }
