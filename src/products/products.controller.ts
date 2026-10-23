@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
   ParseIntPipe,
   Post,
@@ -15,63 +14,27 @@ import type { Request, Response } from "express";
 
 import { CreateProductDTO } from "./DTOs/create-product.dto";
 import { UpdateProductDTO } from "./DTOs/update-product.dto";
-
-type TProduct = {
-  id: number;
-  name: string;
-  price: number;
-};
+import { ProductsService } from "./products.service";
+import type { TProduct } from "./products.service";
 
 @Controller("/api/products")
 export class ProductsController {
-  private products: TProduct[] = [
-    {
-      id: 1,
-      name: "product 1",
-      price: 32,
-    },
-    {
-      id: 2,
-      name: "product 2",
-      price: 132,
-    },
-    {
-      id: 3,
-      name: "product 3",
-      price: 453,
-    },
-    {
-      id: 4,
-      name: "product 4",
-      price: 103,
-    },
-  ];
+  // FIX: this code to be fixed in the dependency injection lesson
+  private productService: ProductsService = new ProductsService();
 
   @Get()
   public getAllProducts(): TProduct[] {
-    return this.products;
+    return this.productService.getAll();
   }
 
   @Get(":id")
   public getSingleProduct(@Param("id", ParseIntPipe) id: number): TProduct {
-    const product = this.products.find((p) => p.id === id);
-    if (!product) {
-      throw new NotFoundException("Product Not Found.");
-    }
-    return product;
+    return this.productService.getOneBy(id);
   }
 
   @Post()
   public createProduct(@Body() body: CreateProductDTO): TProduct {
-    const newProduct: TProduct = {
-      id: this.products.length + 1,
-      name: body.name,
-      price: body.price,
-    };
-
-    this.products.push(newProduct);
-
-    return newProduct;
+    return this.productService.create(body);
   }
 
   @Put(":id")
@@ -80,32 +43,12 @@ export class ProductsController {
     @Body()
     body: UpdateProductDTO,
   ): TProduct {
-    const product = this.products.find((p) => p.id === id);
-    if (!product) {
-      throw new NotFoundException("Product Not Found.");
-    }
-    const productIndex: number = this.products.findIndex((p) => p === product);
-
-    const newProduct: TProduct = {
-      ...product,
-      ...body,
-    };
-    this.products.splice(productIndex, 1, newProduct);
-    return newProduct;
+    return this.productService.update(id, body);
   }
 
   @Delete(":id")
   public deleteProduct(@Param("id", ParseIntPipe) id: number): TProduct {
-    const product = this.products.find((p) => p.id === id);
-
-    if (!product) {
-      throw new NotFoundException("Product Not Found.");
-    }
-
-    const productIndex = this.products.findIndex((p) => p === product);
-
-    this.products.splice(productIndex, 1);
-    return product;
+    return this.productService.delete(id);
   }
 
   // Access Express.js req, res objects
@@ -115,7 +58,7 @@ export class ProductsController {
     @Res() res: Response,
   ) {
     const newProduct: TProduct = {
-      id: this.products.length + 1,
+      id: 99,
       name: req.body.name,
       price: req.body.price,
     };
