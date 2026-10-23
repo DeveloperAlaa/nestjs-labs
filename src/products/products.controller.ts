@@ -13,8 +13,8 @@ import {
 import { Req, Res } from "@nestjs/common";
 import type { Request, Response } from "express";
 
-import type { CreateProductDTO } from "./DTOs/create-product.dto";
-import type { UpdateProductDTO } from "./DTOs/update-product.dto";
+import { CreateProductDTO } from "./DTOs/create-product.dto";
+import { UpdateProductDTO } from "./DTOs/update-product.dto";
 
 type TProduct = {
   id: number;
@@ -77,7 +77,8 @@ export class ProductsController {
   @Put(":id")
   public updateProduct(
     @Param("id", ParseIntPipe) id: number,
-    @Body() body: UpdateProductDTO,
+    @Body()
+    body: UpdateProductDTO,
   ): TProduct {
     const product = this.products.find((p) => p.id === id);
     if (!product) {
