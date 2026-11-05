@@ -19,8 +19,7 @@ import type { TProduct } from "./products.service";
 
 @Controller("/api/products")
 export class ProductsController {
-  // FIX: this code to be fixed in the dependency injection lesson
-  private productService: ProductsService = new ProductsService();
+  constructor(private readonly productService: ProductsService) {}
 
   @Get()
   public getAllProducts(): TProduct[] {

@@ -12,7 +12,7 @@ Content-Type: application/json
 
 {
     "name": "phone",
-    "price": -2323
+    "price": 2323
 }
 
 
