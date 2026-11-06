@@ -5,8 +5,8 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
-  Put,
 } from "@nestjs/common";
 
 import { Req, Res } from "@nestjs/common";
@@ -22,32 +22,32 @@ export class ProductsController {
   constructor(private readonly productService: ProductsService) {}
 
   @Get()
-  public getAllProducts(): TProduct[] {
-    return this.productService.getAll();
+  public async getAllProducts() {
+    return await this.productService.getAll();
   }
 
   @Get(":id")
-  public getSingleProduct(@Param("id", ParseIntPipe) id: number): TProduct {
-    return this.productService.getOneBy(id);
+  public async getSingleProduct(@Param("id", ParseIntPipe) id: number) {
+    return await this.productService.getOneBy(id);
   }
 
   @Post()
-  public createProduct(@Body() body: CreateProductDTO): TProduct {
-    return this.productService.create(body);
+  public async createProduct(@Body() body: CreateProductDTO) {
+    return await this.productService.create(body);
   }
 
-  @Put(":id")
-  public updateProduct(
+  @Patch(":id")
+  public async updateProduct(
     @Param("id", ParseIntPipe) id: number,
     @Body()
     body: UpdateProductDTO,
-  ): TProduct {
-    return this.productService.update(id, body);
+  ) {
+    return await this.productService.update(id, body);
   }
 
   @Delete(":id")
-  public deleteProduct(@Param("id", ParseIntPipe) id: number): TProduct {
-    return this.productService.delete(id);
+  public async deleteProduct(@Param("id", ParseIntPipe) id: number) {
+    return await this.productService.delete(id);
   }
 
   // Access Express.js req, res objects

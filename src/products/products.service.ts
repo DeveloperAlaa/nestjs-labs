@@ -1,6 +1,10 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
+import { Repository } from "typeorm";
+
 import { CreateProductDTO } from "./DTOs/create-product.dto";
 import { UpdateProductDTO } from "./DTOs/update-product.dto";
+import { Product } from "./products.entity";
+import { InjectRepository } from "@nestjs/typeorm";
 
 export type TProduct = {
   id: number;
@@ -10,78 +14,46 @@ export type TProduct = {
 
 @Injectable()
 export class ProductsService {
-  private products: TProduct[] = [
-    {
-      id: 1,
-      name: "product 1",
-      price: 32,
-    },
-    {
-      id: 2,
-      name: "product 2",
-      price: 132,
-    },
-    {
-      id: 3,
-      name: "product 3",
-      price: 453,
-    },
-    {
-      id: 4,
-      name: "product 4",
-      price: 103,
-    },
-  ];
+  constructor(
+    @InjectRepository(Product)
+    private readonly productsRepositry: Repository<Product>,
+  ) {}
 
-  public getAll(): TProduct[] {
-    return this.products;
+  public async getAll() {
+    return await this.productsRepositry.find({ order: { id: "ASC" } });
   }
 
-  public getOneBy(id: number): TProduct {
-    const product = this.products.find((p) => p.id === id);
+  public async getOneBy(id: number) {
+    const product = await this.productsRepositry.findOne({ where: { id } });
     if (!product) {
       throw new NotFoundException("Product Not Found.");
     }
     return product;
   }
 
-  public create({ name, price }: CreateProductDTO): TProduct {
-    const newProduct: TProduct = {
-      id: this.products.length + 1,
-      name,
-      price,
-    };
+  public async create(dto: CreateProductDTO) {
+    const product = this.productsRepositry.create(dto);
 
-    this.products.push(newProduct);
-
-    return newProduct;
+    return await this.productsRepositry.save(product);
   }
 
-  public update(id: number, updateProductDTO: UpdateProductDTO): TProduct {
-    const product = this.products.find((p) => p.id === id);
-    if (!product) {
-      throw new NotFoundException("Product Not Found.");
-    }
-    const productIndex: number = this.products.findIndex((p) => p === product);
+  public async update(id: number, dto: UpdateProductDTO) {
+    let product = await this.getOneBy(id);
 
-    const newProduct: TProduct = {
+    product = {
       ...product,
-      ...updateProductDTO,
+      ...dto,
     };
-    this.products.splice(productIndex, 1, newProduct);
-    return newProduct;
+
+    return await this.productsRepositry.save(product);
   }
 
-  public delete(id: number): TProduct {
-    const product = this.products.find((p) => p.id === id);
+  public async delete(id: number) {
+    const product = await this.getOneBy(id);
+    await this.productsRepositry.remove(product);
 
-    if (!product) {
-      throw new NotFoundException("Product Not Found.");
-    }
-
-    const productIndex = this.products.findIndex((p) => p === product);
-
-    this.products.splice(productIndex, 1);
-    return product;
+    return {
+      message: "Product was deleted successfully.",
+    };
   }
 }

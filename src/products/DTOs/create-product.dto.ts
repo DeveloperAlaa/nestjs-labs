@@ -3,19 +3,23 @@ import {
   IsNumber,
   IsPositive,
   IsString,
+  Length,
   Min,
 } from "class-validator";
 
 export class CreateProductDTO {
   @IsNotEmpty()
   @IsString()
-  //@ts-ignore
-  name: string;
+  @Length(5, 150)
+  title!: string;
+
+  @IsNotEmpty()
+  @IsString()
+  description!: string;
 
   @Min(0)
   @IsPositive()
   @IsNotEmpty()
   @IsNumber()
-  //@ts-ignore
-  price: number;
+  price!: number;
 }

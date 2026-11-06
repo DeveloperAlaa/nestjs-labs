@@ -4,19 +4,21 @@ import {
   IsOptional,
   IsPositive,
   IsString,
-  Min,
+  Length,
 } from "class-validator";
 
 export class UpdateProductDTO {
   @IsOptional()
-  @IsNotEmpty()
+  @Length(5, 150)
   @IsString()
-  name?: string;
+  title?: string;
 
   @IsOptional()
-  @Min(0)
+  @IsString()
+  description?: string;
+
+  @IsOptional()
   @IsPositive()
-  @IsNotEmpty()
   @IsNumber()
   price?: number;
 }
