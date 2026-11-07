@@ -3,7 +3,7 @@ import { Repository } from "typeorm";
 
 import { CreateProductDTO } from "./DTOs/create-product.dto";
 import { UpdateProductDTO } from "./DTOs/update-product.dto";
-import { Product } from "./products.entity";
+import { Product } from "./product.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 
 export type TProduct = {

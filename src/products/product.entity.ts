@@ -4,9 +4,13 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
+  ManyToOne,
 } from "typeorm";
 
-const CURRENT_TIMESTAMP = "CURRENT_TIMESTAMP(6)";
+import { CURRENT_TIMESTAMP } from "../utils/constants";
+import { Review } from "../reviews/review.entity";
+import { User } from "../users/user.entity";
 
 @Entity({ name: "products" })
 export class Product {
@@ -22,13 +26,24 @@ export class Product {
   @Column({ type: "float" })
   price!: number;
 
-  @CreateDateColumn({ type: "timestamp", default: () => CURRENT_TIMESTAMP })
+  @CreateDateColumn({
+    name: "created_at",
+    type: "timestamp",
+    default: () => CURRENT_TIMESTAMP,
+  })
   createdAt!: Date;
 
   @UpdateDateColumn({
+    name: "updated_at",
     type: "timestamp",
     default: () => CURRENT_TIMESTAMP,
     onUpdate: CURRENT_TIMESTAMP,
   })
   updatedAt!: Date;
+
+  @ManyToOne(() => User, (user) => user.products)
+  user!: User;
+
+  @OneToMany(() => Review, (review) => review.product)
+  reviews!: Review[];
 }

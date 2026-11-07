@@ -6,7 +6,9 @@ import { ProductsModule } from "./products/products.module";
 import { UsersModule } from "./users/users.module";
 import { ReviewsModule } from "./reviews/reviews.module";
 import { OrdersModule } from "./orders/orders.module";
-import { Product } from "./products/products.entity";
+import { Product } from "./products/product.entity";
+import { User } from "./users/user.entity";
+import { Review } from "./reviews/review.entity";
 
 @Module({
   imports: [
@@ -36,7 +38,7 @@ import { Product } from "./products/products.entity";
 
         synchronize: process.env.NODE_ENV !== "production", // only true in development
 
-        entities: [Product],
+        entities: [User, Product, Review],
       }),
     }),
   ],
