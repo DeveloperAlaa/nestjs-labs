@@ -5,6 +5,7 @@ import {
   IsString,
   Length,
   Min,
+  MinLength,
 } from "class-validator";
 
 export class CreateProductDTO {
@@ -14,6 +15,7 @@ export class CreateProductDTO {
   title!: string;
 
   @IsNotEmpty()
+  @MinLength(5)
   @IsString()
   description!: string;
 

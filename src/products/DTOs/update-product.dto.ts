@@ -5,6 +5,7 @@ import {
   IsPositive,
   IsString,
   Length,
+  MinLength,
 } from "class-validator";
 
 export class UpdateProductDTO {
@@ -14,6 +15,8 @@ export class UpdateProductDTO {
   title?: string;
 
   @IsOptional()
+  @IsNotEmpty()
+  @MinLength(5)
   @IsString()
   description?: string;
 
