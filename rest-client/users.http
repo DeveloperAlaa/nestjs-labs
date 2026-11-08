@@ -1,2 +1,18 @@
-### Get All Users
-GET http://localhost:3000/api/users
+### Register A User
+POST http://localhost:3000/api/users/auth/register
+Content-Type: application/json
+
+{
+    "email": "w@w.co",
+    "password": "12345678"
+}
+
+
+### Login A User
+POST http://localhost:3000/api/users/auth/login
+Content-Type: application/json
+
+{
+    "email": "a@a.co",
+    "password": "12345678"
+}
