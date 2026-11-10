@@ -1,4 +1,11 @@
-### Register A User
+### Get All Users
+GET  http://localhost:3000/api/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzk0MzE5MjUxLCJleHAiOjE3OTQ0MDU2NTF9.yvsV0dDvx76fcr90xVASOyYERkHrjNUfEIjQljfK8_0
+
+
+
+
+### User Register 
 POST http://localhost:3000/api/users/auth/register
 Content-Type: application/json
 
@@ -8,14 +15,18 @@ Content-Type: application/json
 }
 
 
-### Login A User
+
+
+### User Login
 POST http://localhost:3000/api/users/auth/login
 Content-Type: application/json
 
 {
-    "email": "a@a.co",
+   "email": "k@k.co",
     "password": "12345678"
 }
+
+
 
 
 ### Get User Profile
@@ -23,6 +34,20 @@ GET  http://localhost:3000/api/users/profile
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6InVzZXIiLCJpYXQiOjE3OTQyNjMzODksImV4cCI6MTc5NDM0OTc4OX0.1Z87jCpKjNqPnfpZ2yhl4IRQXFmDBrlqTz4UUG2xWmY
 
 
-### Get All Users
-GET  http://localhost:3000/api/users
+
+
+### Update User Profile
+PATCH http://localhost:3000/api/users
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6InVzZXIiLCJpYXQiOjE3OTQyNjMzODksImV4cCI6MTc5NDM0OTc4OX0.1Z87jCpKjNqPnfpZ2yhl4IRQXFmDBrlqTz4UUG2xWmY
+Content-Type: application/json
+
+{
+  "username": "Alaa Abdo"
+}
+
+
+
+
+### Delete User
+DELETE  http://localhost:3000/api/users/8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6InVzZXIiLCJpYXQiOjE3OTQzMjA4MTEsImV4cCI6MTc5NDQwNzIxMX0.B47ZDKoDcMcGuVv5ckElJO6SpJNpJ0dE57QSoIqB9uQ

@@ -1,17 +1,22 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { JwtService } from "@nestjs/jwt";
 import { Repository } from "typeorm";
 import * as bcrypt from "bcryptjs";
 
 import { User } from "./user.entity";
+
 import { RegisterDto } from "./dtos/register.dto";
 import { LoginDto } from "./dtos/login.dto";
-import { JwtService } from "@nestjs/jwt";
-import { AccessToken } from "../utils/types";
+import { UpdateDto } from "./dtos/update.dto";
+
+import { AccessToken, JWTPayload } from "../utils/types";
+import { TUserRole } from "../utils/enums";
 
 @Injectable()
 export class UsersService {
@@ -67,7 +72,37 @@ export class UsersService {
     return user;
   }
 
-  public getAll(): Promise<User[]> {
-    return this.userRepository.find();
+  public async getAll(): Promise<Omit<User, "password">[]> {
+    const users = await this.userRepository.find();
+    return users.map((user) => ({ ...user, password: undefined }));
+  }
+
+  public async update(id: number, dto: UpdateDto) {
+    const { username, password } = dto;
+
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) throw new NotFoundException("user not found");
+
+    user.username = username ?? user.username;
+
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+      user.password = hashedPassword;
+    }
+    await this.userRepository.save(user);
+    Object.assign(user, { password: undefined });
+    return user;
+  }
+
+  public async delete(id: number, payload: JWTPayload) {
+    const user = await this.getProfile(id);
+
+    if (payload.id === id || payload.role === TUserRole.Admin) {
+      await this.userRepository.remove(user);
+      return { message: "user was deleted successfully" };
+    }
+
+    throw new ForbiddenException("access denied, not allowd");
   }
 }

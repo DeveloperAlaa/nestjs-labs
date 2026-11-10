@@ -6,6 +6,10 @@ import {
   HttpStatus,
   Get,
   UseGuards,
+  Patch,
+  Delete,
+  Param,
+  ParseIntPipe,
 } from "@nestjs/common";
 
 import { UsersService } from "./users.service";
@@ -14,6 +18,7 @@ import { UserPayload } from "./decorators/user-payload.decorator";
 
 import { RegisterDto } from "./dtos/register.dto";
 import { LoginDto } from "./dtos/login.dto";
+import { UpdateDto } from "./dtos/update.dto";
 
 import type { AccessToken, JWTPayload } from "../utils/types";
 import { User } from "./user.entity";
@@ -49,7 +54,29 @@ export class UsersController {
   @Get()
   @UserRole(TUserRole.Admin)
   @UseGuards(AuthRoleGaurd)
-  public getAllUsers(): Promise<User[]> {
+  public getAllUsers(): Promise<Omit<User, "password">[]> {
     return this.usersService.getAll();
+  }
+
+  // PATCH: ~/api/users
+  @Patch()
+  @UserRole(TUserRole.Admin, TUserRole.User)
+  @UseGuards(AuthRoleGaurd)
+  public updateUser(
+    @Body() dto: UpdateDto,
+    @UserPayload() payload: JWTPayload,
+  ) {
+    return this.usersService.update(payload.id, dto);
+  }
+
+  // DELETE: ~/api/users
+  @Delete(":id")
+  @UserRole(TUserRole.Admin, TUserRole.User)
+  @UseGuards(AuthRoleGaurd)
+  public deleteUser(
+    @Param("id", ParseIntPipe) id: number,
+    @UserPayload() payload: JWTPayload,
+  ) {
+    return this.usersService.delete(id, payload);
   }
 }
