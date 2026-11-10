@@ -3,7 +3,7 @@ POST http://localhost:3000/api/users/auth/register
 Content-Type: application/json
 
 {
-    "email": "q@q.co",
+    "email": "a@a.co",
     "password": "12345678"
 }
 
@@ -13,11 +13,16 @@ POST http://localhost:3000/api/users/auth/login
 Content-Type: application/json
 
 {
-    "email": "j@j.co",
+    "email": "a@a.co",
     "password": "12345678"
 }
 
 
 ### Get User Profile
 GET  http://localhost:3000/api/users/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6InVzZXIiLCJpYXQiOjE3OTQyNjMzODksImV4cCI6MTc5NDM0OTc4OX0.1Z87jCpKjNqPnfpZ2yhl4IRQXFmDBrlqTz4UUG2xWmY
+
+
+### Get All Users
+GET  http://localhost:3000/api/users
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6InVzZXIiLCJpYXQiOjE3OTQyNjMzODksImV4cCI6MTc5NDM0OTc4OX0.1Z87jCpKjNqPnfpZ2yhl4IRQXFmDBrlqTz4UUG2xWmY

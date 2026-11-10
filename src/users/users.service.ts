@@ -11,6 +11,7 @@ import { User } from "./user.entity";
 import { RegisterDto } from "./dtos/register.dto";
 import { LoginDto } from "./dtos/login.dto";
 import { JwtService } from "@nestjs/jwt";
+import { AccessToken } from "../utils/types";
 
 @Injectable()
 export class UsersService {
@@ -20,7 +21,7 @@ export class UsersService {
     private readonly jwtService: JwtService,
   ) {}
 
-  public async register(dto: RegisterDto) {
+  public async register(dto: RegisterDto): Promise<AccessToken> {
     const { username, email, password } = dto;
 
     const user = await this.userRepository.findOne({ where: { email } });
@@ -43,7 +44,7 @@ export class UsersService {
     return { accessToken };
   }
 
-  public async login(dto: LoginDto) {
+  public async login(dto: LoginDto): Promise<AccessToken> {
     const { email, password } = dto;
 
     const user = await this.userRepository.findOne({ where: { email } });
@@ -59,10 +60,14 @@ export class UsersService {
     return { accessToken };
   }
 
-  public async getProfile(id: number) {
+  public async getProfile(id: number): Promise<User> {
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) throw new NotFoundException("user not found");
     Object.assign(user, { password: undefined });
     return user;
+  }
+
+  public getAll(): Promise<User[]> {
+    return this.userRepository.find();
   }
 }

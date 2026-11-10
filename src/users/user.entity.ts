@@ -7,7 +7,7 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 
-import { UserRole } from "../utils/enums";
+import { TUserRole } from "../utils/enums";
 import { CURRENT_TIMESTAMP } from "../utils/constants";
 import { Product } from "../products/product.entity";
 import { Review } from "../reviews/review.entity";
@@ -26,13 +26,22 @@ export class User {
   @Column({})
   password!: string;
 
-  @Column({name: "is_account_verified", type: "boolean", default: false })
+  @Column({ name: "is_account_verified", type: "boolean", default: false })
   isAccountVerified!: boolean;
 
-  @Column({ name: "user_role", type: "enum", enum: UserRole, default: UserRole.User })
-  userRole!: UserRole;
+  @Column({
+    name: "user_role",
+    type: "enum",
+    enum: TUserRole,
+    default: TUserRole.User,
+  })
+  userRole!: TUserRole;
 
-  @CreateDateColumn({name: "created_at", type: "timestamp", default: () => CURRENT_TIMESTAMP })
+  @CreateDateColumn({
+    name: "created_at",
+    type: "timestamp",
+    default: () => CURRENT_TIMESTAMP,
+  })
   createdAt!: Date;
 
   @UpdateDateColumn({

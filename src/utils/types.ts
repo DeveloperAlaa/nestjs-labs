@@ -1,6 +1,10 @@
-import { UserRole } from "./enums";
+import { TUserRole } from "./enums";
 
 export type JWTPayload = {
   id: number;
-  role: UserRole;
+  role: TUserRole;
+};
+
+export type AccessToken = {
+  accessToken: string;
 };
