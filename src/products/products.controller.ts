@@ -12,8 +12,8 @@ import {
 import { Req, Res } from "@nestjs/common";
 import type { Request, Response } from "express";
 
-import { CreateProductDTO } from "./DTOs/create-product.dto";
-import { UpdateProductDTO } from "./DTOs/update-product.dto";
+import { CreateProductDTO } from "./dtos/create-product.dto";
+import { UpdateProductDTO } from "./dtos/update-product.dto";
 import { ProductsService } from "./products.service";
 import type { TProduct } from "./products.service";
 

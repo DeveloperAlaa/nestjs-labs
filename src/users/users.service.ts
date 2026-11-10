@@ -1,19 +1,23 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import * as bcrypt from "bcryptjs";
 
 import { User } from "./user.entity";
-import { JWTGenerator } from "./jwtGenerator.service";
-import { RegisterDto } from "./DTOs/register.dto";
-import { LoginDto } from "./DTOs/login.dto";
+import { RegisterDto } from "./dtos/register.dto";
+import { LoginDto } from "./dtos/login.dto";
+import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    private readonly jwtGenerator: JWTGenerator,
+    private readonly jwtService: JwtService,
   ) {}
 
   public async register(dto: RegisterDto) {
@@ -32,11 +36,11 @@ export class UsersService {
     });
     newUser = await this.userRepository.save(newUser);
 
-    const accesstoken = await this.jwtGenerator.generate({
+    const accessToken = await this.jwtService.signAsync({
       id: newUser.id,
       role: newUser.userRole,
     });
-    return { accesstoken };
+    return { accessToken };
   }
 
   public async login(dto: LoginDto) {
@@ -47,11 +51,18 @@ export class UsersService {
 
     const isPasswordMatch = await bcrypt.compare(password, user.password);
     if (!isPasswordMatch) throw new BadRequestException("Invalid Credintials.");
-    
-    const accesstoken = await this.jwtGenerator.generate({
+
+    const accessToken = await this.jwtService.signAsync({
       id: user.id,
       role: user.userRole,
     });
-    return { accesstoken };
+    return { accessToken };
+  }
+
+  public async getProfile(id: number) {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) throw new NotFoundException("user not found");
+    Object.assign(user, { password: undefined });
+    return user;
   }
 }
