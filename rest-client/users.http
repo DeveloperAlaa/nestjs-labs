@@ -10,7 +10,7 @@ POST http://localhost:3000/api/users/auth/register
 Content-Type: application/json
 
 {
-    "email": "a@a.co",
+    "email": "p@p.co",
     "password": "12345678"
 }
 
@@ -22,7 +22,7 @@ POST http://localhost:3000/api/users/auth/login
 Content-Type: application/json
 
 {
-   "email": "k@k.co",
+   "email": "a@a.co",
     "password": "12345678"
 }
 
@@ -31,14 +31,14 @@ Content-Type: application/json
 
 ### Get User Profile
 GET  http://localhost:3000/api/users/profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6InVzZXIiLCJpYXQiOjE3OTQyNjMzODksImV4cCI6MTc5NDM0OTc4OX0.1Z87jCpKjNqPnfpZ2yhl4IRQXFmDBrlqTz4UUG2xWmY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzk0MzM2NDUxLCJleHAiOjE3OTQ0MjI4NTF9.8lyLUl6kAMF9kFxuM-rCFlAxzKP62HVRCPyRSdbiWe8
 
 
 
 
 ### Update User Profile
 PATCH http://localhost:3000/api/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6InVzZXIiLCJpYXQiOjE3OTQyNjMzODksImV4cCI6MTc5NDM0OTc4OX0.1Z87jCpKjNqPnfpZ2yhl4IRQXFmDBrlqTz4UUG2xWmY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzk0MzE5MjUxLCJleHAiOjE3OTQ0MDU2NTF9.yvsV0dDvx76fcr90xVASOyYERkHrjNUfEIjQljfK8_0
 Content-Type: application/json
 
 {

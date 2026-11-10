@@ -1,2 +1,0 @@
-### Get All Orders
-GET http://localhost:3000/api/orders

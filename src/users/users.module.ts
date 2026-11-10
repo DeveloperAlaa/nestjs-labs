@@ -1,15 +1,16 @@
-import { forwardRef, Module } from "@nestjs/common";
+import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { ConfigService } from "@nestjs/config";
+import { JwtModule } from "@nestjs/jwt";
 
 import { UsersController } from "./users.controller";
-import { UsersService } from "./users.service";
-import { TypeOrmModule } from "@nestjs/typeorm";
+import { UsersService } from "./providers/users.service";
+import { AuthProvider } from "./providers/auth.provider";
 import { User } from "./user.entity";
-import { JwtModule } from "@nestjs/jwt";
-import { ConfigService } from "@nestjs/config";
 
 @Module({
   controllers: [UsersController],
-  providers: [UsersService],
+  providers: [UsersService ,AuthProvider],
   imports: [
     TypeOrmModule.forFeature([User]),
     JwtModule.registerAsync({

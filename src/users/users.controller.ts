@@ -12,8 +12,8 @@ import {
   ParseIntPipe,
 } from "@nestjs/common";
 
-import { UsersService } from "./users.service";
-import { AuthGaurd } from "./gaurds/auth.gaurd";
+import { UsersService } from "./providers/users.service";
+import { AuthGaurd } from "./gaurds/auth.guard";
 import { UserPayload } from "./decorators/user-payload.decorator";
 
 import { RegisterDto } from "./dtos/register.dto";
@@ -25,6 +25,7 @@ import { User } from "./user.entity";
 import { AuthRoleGaurd } from "./gaurds/auth-role.guard";
 import { UserRole } from "./decorators/user-role.decorator";
 import { TUserRole } from "../utils/enums";
+import { PasswordInterceptor } from "../utils/interceptors/password.interceptor";
 
 @Controller("/api/users")
 export class UsersController {
@@ -44,6 +45,7 @@ export class UsersController {
   }
 
   // GET: ~/api/users/profile
+  // @UseInterceptors(PasswordInterceptor)
   @Get("profile")
   @UseGuards(AuthGaurd)
   public async getProfile(@UserPayload() payload: JWTPayload): Promise<User> {

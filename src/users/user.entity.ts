@@ -7,6 +7,8 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 
+import { Exclude } from "class-transformer";
+
 import { TUserRole } from "../utils/enums";
 import { CURRENT_TIMESTAMP } from "../utils/constants";
 import { Product } from "../products/product.entity";
@@ -23,6 +25,7 @@ export class User {
   @Column({ type: "varchar", length: 250, unique: true })
   email!: string;
 
+  @Exclude()
   @Column({})
   password!: string;
 

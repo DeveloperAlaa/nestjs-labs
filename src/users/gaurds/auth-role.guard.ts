@@ -10,7 +10,7 @@ import { JwtService } from "@nestjs/jwt";
 import { Request } from "express";
 import { TUserRole } from "../../utils/enums";
 import { JWTPayload } from "../../utils/types";
-import { UsersService } from "../users.service";
+import { UsersService } from "../providers/users.service";
 
 @Injectable()
 export class AuthRoleGaurd implements CanActivate {
