@@ -10,7 +10,8 @@ import { User } from "./user.entity";
 
 @Module({
   controllers: [UsersController],
-  providers: [UsersService ,AuthProvider],
+  providers: [UsersService, AuthProvider],
+  exports: [UsersService],
   imports: [
     TypeOrmModule.forFeature([User]),
     JwtModule.registerAsync({

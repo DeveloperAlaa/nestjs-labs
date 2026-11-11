@@ -1,5 +1,5 @@
 ### Get All Products
-GET http://localhost:3000/api/products
+GET http://localhost:3000/api/products?minPrice=0&maxPrice=300
 
 
 ### Get Single Product
@@ -8,17 +8,19 @@ GET http://localhost:3000/api/products/3
 
 ### Create Product
 POST http://localhost:3000/api/products
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzk0NDMyMjU0LCJleHAiOjE3OTQ1MTg2NTR9.aXcKbqh8gva254JG-DTfkV3bKWMreklk4NUa3LEYv40
 Content-Type: application/json
 
 {
-    "title": "product 5",
-    "description": "this is a description for product 5",
-    "price": 768
+    "title": "smart watch series 6",
+    "description": "about this watch",
+    "price": 249
 }
 
 
 ### Update Product
-PATCH  http://localhost:3000/api/products/1
+PATCH  http://localhost:3000/api/products/11
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzk0NDMyMjU0LCJleHAiOjE3OTQ1MTg2NTR9.aXcKbqh8gva254JG-DTfkV3bKWMreklk4NUa3LEYv40
 Content-Type: application/json
 
 {
@@ -28,4 +30,8 @@ Content-Type: application/json
 
 
 ### Delete Product
-DELETE http://localhost:3000/api/products/2
+DELETE http://localhost:3000/api/products/8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzk0NDMyMjU0LCJleHAiOjE3OTQ1MTg2NTR9.aXcKbqh8gva254JG-DTfkV3bKWMreklk4NUa3LEYv40
+
+# admin: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzk0NDMyMjU0LCJleHAiOjE3OTQ1MTg2NTR9.aXcKbqh8gva254JG-DTfkV3bKWMreklk4NUa3LEYv40
+# user: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzk0NDMyNzIxLCJleHAiOjE3OTQ1MTkxMjF9.-K13aIFHyyBQTFrA5bNh6w5Dmlrx9UXXMVeY6t6VO3c

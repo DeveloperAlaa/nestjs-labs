@@ -22,7 +22,7 @@ POST http://localhost:3000/api/users/auth/login
 Content-Type: application/json
 
 {
-   "email": "a@a.co",
+   "email": "p@p.co",
     "password": "12345678"
 }
 
@@ -31,8 +31,7 @@ Content-Type: application/json
 
 ### Get User Profile
 GET  http://localhost:3000/api/users/profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzk0MzM2NDUxLCJleHAiOjE3OTQ0MjI4NTF9.8lyLUl6kAMF9kFxuM-rCFlAxzKP62HVRCPyRSdbiWe8
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzk0NDMyMTczLCJleHAiOjE3OTQ1MTg1NzN9.RessNkdh_m_Vi2EMdaBlxQZ6htmzVF_bNAfYgsfnbnI
 
 
 
