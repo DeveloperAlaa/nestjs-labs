@@ -27,13 +27,12 @@ export class AuthGaurd implements CanActivate {
         });
 
         request["payload"] = payload;
+        return true;
       } catch (error) {
         throw new UnauthorizedException("invaild token");
       }
-
-      return true;
     } else {
-      return false;
+      throw new UnauthorizedException("access denied, no token provided");
     }
   }
 }

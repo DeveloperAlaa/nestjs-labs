@@ -13,7 +13,7 @@ import {
 } from "@nestjs/common";
 
 import { UsersService } from "./providers/users.service";
-import { AuthGaurd } from "./gaurds/auth.guard";
+import { AuthGaurd } from "./guards/auth.guard";
 import { UserPayload } from "./decorators/user-payload.decorator";
 
 import { RegisterDto } from "./dtos/register.dto";
@@ -22,10 +22,9 @@ import { UpdateDto } from "./dtos/update.dto";
 
 import type { AccessToken, JWTPayload } from "../utils/types";
 import { User } from "./user.entity";
-import { AuthRoleGaurd } from "./gaurds/auth-role.guard";
+import { AuthRoleGaurd } from "./guards/auth-role.guard";
 import { UserRole } from "./decorators/user-role.decorator";
 import { TUserRole } from "../utils/enums";
-import { PasswordInterceptor } from "../utils/interceptors/password.interceptor";
 
 @Controller("/api/users")
 export class UsersController {
