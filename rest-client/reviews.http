@@ -1,2 +1,47 @@
 ### Get All Reviews
-GET http://localhost:3000/api/reviews
+GET  http://localhost:3000/api/reviews
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzk0NDg3OTY3LCJleHAiOjE3OTQ1NzQzNjd9.LoVGfWWgTGB-YCUcwkP4U-3t7YEIPkhcs81RN0vnF3k
+
+
+
+### Create Review
+POST http://localhost:3000/api/reviews/13
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzk0NDg3OTY3LCJleHAiOjE3OTQ1NzQzNjd9.LoVGfWWgTGB-YCUcwkP4U-3t7YEIPkhcs81RN0vnF3k
+Content-Type: application/json
+
+{
+    "rating": 4,
+    "comment": "nwest review"
+}
+
+
+
+
+### Get Review
+GET  http://localhost:3000/api/reviews/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzk0NDMyMTczLCJleHAiOjE3OTQ1MTg1NzN9.RessNkdh_m_Vi2EMdaBlxQZ6htmzVF_bNAfYgsfnbnI
+
+
+
+### Update Review
+PATCH http://localhost:3000/api/reviews/5
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzk0NDg3OTY3LCJleHAiOjE3OTQ1NzQzNjd9.LoVGfWWgTGB-YCUcwkP4U-3t7YEIPkhcs81RN0vnF3k
+Content-Type: application/json
+
+{
+  "rating": 2,
+  "comment": "bad"
+}
+
+
+
+
+### Delete reviews
+DELETE  http://localhost:3000/api/reviews/5
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzk0NDg3OTY3LCJleHAiOjE3OTQ1NzQzNjd9.LoVGfWWgTGB-YCUcwkP4U-3t7YEIPkhcs81RN0vnF3k
+
+
+
+
+# admin: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzk0NDg3OTY3LCJleHAiOjE3OTQ1NzQzNjd9.LoVGfWWgTGB-YCUcwkP4U-3t7YEIPkhcs81RN0vnF3k
+# user: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6InVzZXIiLCJpYXQiOjE3OTQ0ODc5NDAsImV4cCI6MTc5NDU3NDM0MH0.O6EZ6v6J9HmXBrWr7ms3ikCcsMH5tBVMY4ayx_S0MYU

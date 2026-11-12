@@ -16,9 +16,9 @@ import { UsersService } from "./providers/users.service";
 import { AuthGaurd } from "./guards/auth.guard";
 import { UserPayload } from "./decorators/user-payload.decorator";
 
-import { RegisterDto } from "./dtos/register.dto";
-import { LoginDto } from "./dtos/login.dto";
-import { UpdateDto } from "./dtos/update.dto";
+import { RegisterUserDto } from "./dtos/register-user.dto";
+import { LoginUserDto } from "./dtos/login-user.dto";
+import { UpdateUserDto } from "./dtos/update-user.dto";
 
 import type { AccessToken, JWTPayload } from "../utils/types";
 import { User } from "./user.entity";
@@ -32,14 +32,14 @@ export class UsersController {
 
   // POST: ~/api/users/auth/register
   @Post("auth/register")
-  public async register(@Body() dto: RegisterDto): Promise<AccessToken> {
+  public async register(@Body() dto: RegisterUserDto): Promise<AccessToken> {
     return await this.usersService.register(dto);
   }
 
   // POST: ~/api/users/auth/login
   @HttpCode(HttpStatus.OK)
   @Post("auth/login")
-  public async login(@Body() dto: LoginDto): Promise<AccessToken> {
+  public async login(@Body() dto: LoginUserDto): Promise<AccessToken> {
     return await this.usersService.login(dto);
   }
 
@@ -64,7 +64,7 @@ export class UsersController {
   @UserRole(TUserRole.Admin, TUserRole.User)
   @UseGuards(AuthRoleGaurd)
   public updateUser(
-    @Body() dto: UpdateDto,
+    @Body() dto: UpdateUserDto,
     @UserPayload() payload: JWTPayload,
   ) {
     return this.usersService.update(payload.id, dto);

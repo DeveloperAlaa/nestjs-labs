@@ -6,8 +6,8 @@ import * as bcrypt from "bcryptjs";
 
 import { User } from "../user.entity";
 
-import { RegisterDto } from "../dtos/register.dto";
-import { LoginDto } from "../dtos/login.dto";
+import { RegisterUserDto } from "../dtos/register-user.dto";
+import { LoginUserDto } from "../dtos/login-user.dto";
 
 import { AccessToken } from "../../utils/types";
 
@@ -19,7 +19,7 @@ export class AuthProvider {
     private readonly jwtService: JwtService,
   ) {}
 
-  public async register(dto: RegisterDto): Promise<AccessToken> {
+  public async register(dto: RegisterUserDto): Promise<AccessToken> {
     const { username, email, password } = dto;
 
     const user = await this.userRepository.findOne({ where: { email } });
@@ -41,7 +41,7 @@ export class AuthProvider {
     return { accessToken };
   }
 
-  public async login(dto: LoginDto): Promise<AccessToken> {
+  public async login(dto: LoginUserDto): Promise<AccessToken> {
     const { email, password } = dto;
 
     const user = await this.userRepository.findOne({ where: { email } });

@@ -1,21 +1,26 @@
 import {
-  IsNotEmpty,
-  IsOptional,
   IsString,
+  IsNotEmpty,
   MaxLength,
+  IsEmail,
   MinLength,
+  IsOptional,
 } from "class-validator";
 
-export class UpdateDto {
+export class RegisterUserDto {
   @IsOptional()
   @MaxLength(150)
   @IsNotEmpty()
   @IsString()
   username?: string;
 
-  @IsOptional()
+  @MaxLength(250)
+  @IsNotEmpty()
+  @IsEmail()
+  email!: string;
+
   @MinLength(8)
   @IsNotEmpty()
   @IsString()
-  password?: string;
+  password!: string;
 }

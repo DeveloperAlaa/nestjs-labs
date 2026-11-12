@@ -16,12 +16,16 @@ export class Review {
   id!: number;
 
   @Column({ type: "int" })
-  rate!: number;
+  rating!: number;
 
   @Column()
   comment!: string;
 
-  @CreateDateColumn({name: "created_at", type: "timestamp", default: () => CURRENT_TIMESTAMP })
+  @CreateDateColumn({
+    name: "created_at",
+    type: "timestamp",
+    default: () => CURRENT_TIMESTAMP,
+  })
   createdAt!: Date;
 
   @UpdateDateColumn({
@@ -32,7 +36,7 @@ export class Review {
   })
   updatedAt!: Date;
 
-  @ManyToOne(() => User, (user) => user.reviews)
+  @ManyToOne(() => User, (user) => user.reviews, { eager: true })
   user!: User;
 
   @ManyToOne(() => Product, (product) => product.reviews)

@@ -9,9 +9,9 @@ import { Repository } from "typeorm";
 import { AuthProvider } from "./auth.provider";
 import { User } from "../user.entity";
 
-import { RegisterDto } from "../dtos/register.dto";
-import { LoginDto } from "../dtos/login.dto";
-import { UpdateDto } from "../dtos/update.dto";
+import { RegisterUserDto } from "../dtos/register-user.dto";
+import { LoginUserDto } from "../dtos/login-user.dto";
+import { UpdateUserDto } from "../dtos/update-user.dto";
 
 import { AccessToken, JWTPayload } from "../../utils/types";
 import { TUserRole } from "../../utils/enums";
@@ -24,11 +24,11 @@ export class UsersService {
     private readonly AuthProvider: AuthProvider,
   ) {}
 
-  public async register(dto: RegisterDto): Promise<AccessToken> {
+  public async register(dto: RegisterUserDto): Promise<AccessToken> {
     return this.AuthProvider.register(dto);
   }
 
-  public async login(dto: LoginDto): Promise<AccessToken> {
+  public async login(dto: LoginUserDto): Promise<AccessToken> {
     return this.AuthProvider.login(dto);
   }
 
@@ -42,7 +42,7 @@ export class UsersService {
     return await this.userRepository.find();
   }
 
-  public async update(id: number, dto: UpdateDto): Promise<User> {
+  public async update(id: number, dto: UpdateUserDto): Promise<User> {
     const { username, password } = dto;
 
     const user = await this.userRepository.findOne({ where: { id } });

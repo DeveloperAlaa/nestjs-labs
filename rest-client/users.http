@@ -22,7 +22,7 @@ POST http://localhost:3000/api/users/auth/login
 Content-Type: application/json
 
 {
-   "email": "p@p.co",
+   "email": "o@o.co",
     "password": "12345678"
 }
 
@@ -50,3 +50,9 @@ Content-Type: application/json
 ### Delete User
 DELETE  http://localhost:3000/api/users/8
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6InVzZXIiLCJpYXQiOjE3OTQzMjA4MTEsImV4cCI6MTc5NDQwNzIxMX0.B47ZDKoDcMcGuVv5ckElJO6SpJNpJ0dE57QSoIqB9uQ
+
+
+
+
+// admin: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzk0NDg3OTY3LCJleHAiOjE3OTQ1NzQzNjd9.LoVGfWWgTGB-YCUcwkP4U-3t7YEIPkhcs81RN0vnF3k
+//  user: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6InVzZXIiLCJpYXQiOjE3OTQ0ODc5NDAsImV4cCI6MTc5NDU3NDM0MH0.O6EZ6v6J9HmXBrWr7ms3ikCcsMH5tBVMY4ayx_S0MYU
