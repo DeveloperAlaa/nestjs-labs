@@ -1,15 +1,21 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { Repository } from "typeorm";
-import { Review } from "./review.entity";
 import { InjectRepository } from "@nestjs/typeorm";
-import { UsersService } from "../users/providers/users.service";
-import { ProductsService } from "../products/products.service";
+
+import { Repository } from "typeorm";
+
+import { Review } from "./review.entity";
+
 import { CreateReviewDto } from "./dtos/create-review.dto";
 import { UpdateReviewDto } from "./dtos/update-review.dto";
+
+import { UsersService } from "../users/providers/users.service";
+import { ProductsService } from "../products/products.service";
+
 import { TUserRole } from "../utils/enums";
 import { JWTPayload } from "../utils/types";
 
@@ -39,8 +45,34 @@ export class ReviewsService {
     };
   }
 
-  public getAll() {
-    return this.reviewsRepository.find({ order: { createdAt: "DESC" } });
+  public async getAll(page: number, limit: number) {
+    const total = await this.reviewsRepository.count();
+    const totalPages = Math.ceil(total / limit);
+
+    if (page === 0 || limit === 0)
+      throw new BadRequestException(
+        "page and limit search queries can not be 0.",
+      );
+    if (page > totalPages)
+      throw new NotFoundException("request page dosn't exist.");
+
+    const reviews = await this.reviewsRepository.find({
+      skip: (page - 1) * limit,
+      take: limit,
+      order: { createdAt: "DESC" },
+    });
+    const meta = {
+      page,
+      limit,
+      totalPages: totalPages,
+      prevPage: page - 1 > 0,
+      nextPage: page < totalPages,
+    };
+
+    return {
+      data: reviews,
+      meta,
+    };
   }
 
   public async update(reviewId: number, userId: number, dto: UpdateReviewDto) {
