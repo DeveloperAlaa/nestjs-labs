@@ -1,6 +1,6 @@
 ### Get All Users
 GET  http://localhost:3000/api/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzk0MzE5MjUxLCJleHAiOjE3OTQ0MDU2NTF9.yvsV0dDvx76fcr90xVASOyYERkHrjNUfEIjQljfK8_0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzk0NDg3OTY3LCJleHAiOjE3OTQ1NzQzNjd9.LoVGfWWgTGB-YCUcwkP4U-3t7YEIPkhcs81RN0vnF3k
 
 
 
@@ -22,7 +22,7 @@ POST http://localhost:3000/api/users/auth/login
 Content-Type: application/json
 
 {
-   "email": "o@o.co",
+   "email": "k@k.co",
     "password": "12345678"
 }
 
@@ -31,7 +31,7 @@ Content-Type: application/json
 
 ### Get User Profile
 GET  http://localhost:3000/api/users/profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzk0NDMyMTczLCJleHAiOjE3OTQ1MTg1NzN9.RessNkdh_m_Vi2EMdaBlxQZ6htmzVF_bNAfYgsfnbnI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Niwicm9sZSI6InVzZXIiLCJpYXQiOjE3OTQ1MDYyMDQsImV4cCI6MTc5NTExMTAwNH0.xb4Gm4gwBhSRbkCyRpVxv0OXE28ye8_HtdRLTBFixWU
 
 
 
@@ -48,10 +48,8 @@ Content-Type: application/json
 
 
 ### Delete User
-DELETE  http://localhost:3000/api/users/8
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6InVzZXIiLCJpYXQiOjE3OTQzMjA4MTEsImV4cCI6MTc5NDQwNzIxMX0.B47ZDKoDcMcGuVv5ckElJO6SpJNpJ0dE57QSoIqB9uQ
-
-
+DELETE  http://localhost:3000/api/users/5
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6InVzZXIiLCJpYXQiOjE3OTQ1MDYzNDUsImV4cCI6MTc5NTExMTE0NX0.hTGv0xtfntn5q68U2s6_RfnulmL84HrMulKeIAv6hX4
 
 
 // admin: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzk0NDg3OTY3LCJleHAiOjE3OTQ1NzQzNjd9.LoVGfWWgTGB-YCUcwkP4U-3t7YEIPkhcs81RN0vnF3k
