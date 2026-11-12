@@ -45,8 +45,7 @@ export class UsersService {
   public async update(id: number, dto: UpdateUserDto): Promise<User> {
     const { username, password } = dto;
 
-    const user = await this.userRepository.findOne({ where: { id } });
-    if (!user) throw new NotFoundException("user not found");
+    const user = await this.getProfile(id)
 
     user.username = username ?? user.username;
 
