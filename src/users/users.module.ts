@@ -10,6 +10,7 @@ import { UsersController } from "./users.controller";
 import { UsersService } from "./providers/users.service";
 import { AuthProvider } from "./providers/auth.provider";
 import { User } from "./user.entity";
+import { generateFileName } from "../utils/funcs/filename-generator";
 
 @Module({
   controllers: [UsersController],
@@ -31,10 +32,7 @@ import { User } from "./user.entity";
       storage: diskStorage({
         destination: "./images/users",
         filename: (req, file, callback) => {
-          const filePrefix = `${Date.now()}${Math.round(Math.random() * 1_000_000)}`;
-          const fileExtension = file.originalname.split(".").at(-1);
-          const fileName = `${filePrefix}.${fileExtension}`;
-          callback(null, fileName);
+          callback(null, generateFileName(file.originalname));
         },
       }),
       fileFilter: (req, file, callback) => {

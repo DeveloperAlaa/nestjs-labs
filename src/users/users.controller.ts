@@ -105,19 +105,14 @@ export class UsersController {
   }
 
   // GET: ~/api/users/profile/image
-  @Get("profile/image/:imageName")
+  @Get("profile/image")
   @UseGuards(AuthGaurd)
   public async getProfileImage(
     @UserPayload() payload: JWTPayload,
-    @Param("imageName") imageName: string,
     @Res() res: Response,
   ) {
     const user = await this.usersService.getProfile(payload.id);
-
-    if (user.profileImage !== imageName)
-      throw new BadRequestException("invalid profile image name");
-
-    return res.sendFile(imageName, { root: "./images/users" });
+    return res.sendFile(user.profileImage, { root: "./images/users" });
   }
 
   // DELETE: ~/api/users/profile/image

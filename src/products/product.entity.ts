@@ -26,6 +26,12 @@ export class Product {
   @Column({ type: "float" })
   price!: number;
 
+  @Column({ nullable: true })
+  primaryImage!: string;
+
+  @Column({ type: "json", nullable: true })
+  secondaryImages!: string;
+
   @CreateDateColumn({
     name: "created_at",
     type: "timestamp",
