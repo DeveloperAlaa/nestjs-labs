@@ -95,30 +95,7 @@ export class UsersController {
 
   @Post("/profile/image")
   @UseGuards(AuthGaurd)
-  @UseInterceptors(
-    FileInterceptor("profile-image", {
-      storage: diskStorage({
-        destination: "./images/users",
-        filename: (req, file, callback) => {
-          const filePrefix = `${Date.now()}${Math.round(Math.random() * 1_000_000)}`;
-          const fileExtension = file.originalname.split(".").at(-1);
-          const fileName = `${filePrefix}.${fileExtension}`;
-          callback(null, fileName);
-        },
-      }),
-      fileFilter: (req, file, callback) => {
-        if (file.mimetype.startsWith("image")) {
-          callback(null, true);
-        } else {
-          callback(
-            new BadRequestException("onlt image formats are acceptable"),
-            false,
-          );
-        }
-      },
-      limits: { fileSize: 1024 * 1024 * 5 },
-    }),
-  )
+  @UseInterceptors(FileInterceptor("profile-image"))
   public addProfileImage(
     @UserPayload() payload: JWTPayload,
     @UploadedFile() imageFile: Express.Multer.File,
