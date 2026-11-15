@@ -29,6 +29,9 @@ export class User {
   @Column({})
   password!: string;
 
+  @Column({ nullable: true, default: null })
+  profileImage!: string;
+
   @Column({ name: "is_account_verified", type: "boolean", default: false })
   isAccountVerified!: boolean;
 

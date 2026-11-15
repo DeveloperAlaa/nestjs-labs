@@ -1,10 +1,15 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+
+import { join } from "node:path";
+import { unlinkSync } from "node:fs";
 
 import { AuthProvider } from "./auth.provider";
 import { User } from "../user.entity";
@@ -45,7 +50,7 @@ export class UsersService {
   public async update(id: number, dto: UpdateUserDto): Promise<User> {
     const { username, password } = dto;
 
-    const user = await this.getProfile(id)
+    const user = await this.getProfile(id);
 
     user.username = username ?? user.username;
 
@@ -64,5 +69,35 @@ export class UsersService {
     }
 
     throw new ForbiddenException("access denied, not allowd");
+  }
+
+  public async addProfileImage(userId: number, imageName: string) {
+    const user = await this.getProfile(userId);
+    if (user.profileImage === null) {
+      user.profileImage = imageName;
+      return await this.userRepository.save(user);
+    }
+
+    await this.removeProfileImage(userId);
+    user.profileImage = imageName;
+    return await this.userRepository.save(user);
+  }
+
+  public async removeProfileImage(userId: number) {
+    const user = await this.getProfile(userId);
+
+    if (user.profileImage === null)
+      throw new BadRequestException("there is already no profile image");
+
+    const oldProfileImagePath = join(
+      process.cwd(),
+      "images/users",
+      user.profileImage,
+    );
+    unlinkSync(oldProfileImagePath);
+
+    Object.assign(user, { profileImage: null });
+
+    return await this.userRepository.save(user);
   }
 }
