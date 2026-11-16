@@ -1,0 +1,39 @@
+**Senario 1.the user registers for the first time**
+
+1. user register with an email and password to our endpoint: api/auth/register
+2. check the email already exists in our DB or not. if it exists, throw BadRequestExeption("invalid email or password"), if not go on
+3. hash the password
+4. make a new user with the email & hashed password
+5. generate a verificationToken then assign it to the new user
+6. save the new user to the DB
+7. send a verification email to the email to verify if the new user own that email or not
+8. respond with a succes message: "Registered successfully. A verification email will be sent to you"
+9. if the new user really own the email he will get an email with a verification link to click
+10. the verification link to click makes a GET request to our server to the endpoint: api/auth/users/verify/email/:userId/:verificationToken
+11. our server recives the request then gets the :userId & :verificationToken
+12. we get the user with the :userId. if the id is invaild we throw NotFoundExeption("user not found") else we go on
+13. we check if the user.verificationToken === null in the DB and if the user.verificationToken === verificationToken if all good we go on
+14. after checking that the user has a verificationToken in the DB and it's the same one as the incoming verificationToken
+    we override it to be null in the DB then change the is_email_verified in the DB to be true then the user can login and consume our api
+    
+
+
+
+
+
+
+**Senario 2.the user didn't verify he owns the email and tries to log in**
+-- the user didn't click the verification link in the email he recived and tries to log in
+-- the user deleted the email before clicking the verification link
+-- the user don't own the email and tries to log in anyways
+   
+1. the user logs in with the email & password he registerd with
+2. we get the user with that email in our DB, if it dosen't exists throw BadRequestExeption("invaild email or password")
+3. we hash the password the user loged in with then compare it with the stored hashed one if it's diffrent throw BadRequestExeption("invaild email or password")
+4. -- we check if the user.is_email_verified, if it's false:
+5. we then ckeck the user.verificationToken, if it has a token :
+6. we resend the verification email again to the user then response with a message: "A verification email will be sent to you, verify your email to log in"
+7. if the user.verificationToken dosn't has a token we generate a new token then assign it to the user then save the user in the DB
+7. then send a verificatoin email to the user then response with a message: "A verification email will be sent to you, verify your email to log in"
+8. -- if the user.is_email_verified is true:
+9. we generate a jwt with a payload containing an object {id: user.id, role: user.role} with a secret then respond to the user with that token
