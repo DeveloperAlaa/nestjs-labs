@@ -18,8 +18,6 @@ import {
 
 import { FileInterceptor } from "@nestjs/platform-express";
 
-import { diskStorage } from "multer";
-
 import type { Express, Response } from "express";
 
 import { UsersService } from "./providers/users.service";
@@ -30,7 +28,7 @@ import { RegisterUserDto } from "./dtos/register-user.dto";
 import { LoginUserDto } from "./dtos/login-user.dto";
 import { UpdateUserDto } from "./dtos/update-user.dto";
 
-import type { AccessToken, JWTPayload } from "../utils/types";
+import type { JWTPayload } from "../utils/types";
 import { User } from "./user.entity";
 import { AuthRoleGaurd } from "./guards/auth-role.guard";
 import { UserRole } from "./decorators/user-role.decorator";
@@ -42,15 +40,24 @@ export class UsersController {
 
   // POST: ~/api/users/auth/register
   @Post("auth/register")
-  public async register(@Body() dto: RegisterUserDto): Promise<AccessToken> {
+  public async register(@Body() dto: RegisterUserDto) {
     return await this.usersService.register(dto);
   }
 
   // POST: ~/api/users/auth/login
   @HttpCode(HttpStatus.OK)
   @Post("auth/login")
-  public async login(@Body() dto: LoginUserDto): Promise<AccessToken> {
+  public async login(@Body() dto: LoginUserDto) {
     return await this.usersService.login(dto);
+  }
+
+  // GET: ~/api/users/auth/verify/email/:userId/:verificationToken
+  @Get("auth/verify/email/:userId/:verificationToken")
+  public async verifyEmail(
+    @Param("userId", ParseIntPipe) userId: number,
+    @Param("verificationToken") verificationToken: string,
+  ) {
+    return this.usersService.verifyEmail(userId, verificationToken);
   }
 
   // GET: ~/api/users/profile

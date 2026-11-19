@@ -3,7 +3,6 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
-  UnauthorizedException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
@@ -29,12 +28,16 @@ export class UsersService {
     private readonly AuthProvider: AuthProvider,
   ) {}
 
-  public async register(dto: RegisterUserDto): Promise<AccessToken> {
+  public async register(dto: RegisterUserDto) {
     return this.AuthProvider.register(dto);
   }
 
-  public async login(dto: LoginUserDto): Promise<AccessToken> {
+  public async login(dto: LoginUserDto) {
     return this.AuthProvider.login(dto);
+  }
+
+  public async verifyEmail(userId: number, verificationToken: string) {
+    return await this.AuthProvider.verifyEmail(userId, verificationToken);
   }
 
   public async getProfile(id: number): Promise<User> {

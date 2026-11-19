@@ -35,6 +35,9 @@ export class User {
   @Column({ name: "is_account_verified", type: "boolean", default: false })
   isAccountVerified!: boolean;
 
+  @Column({nullable: true, default: null})
+  verificationToken!: string 
+ 
   @Column({
     name: "user_role",
     type: "enum",

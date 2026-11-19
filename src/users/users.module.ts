@@ -11,12 +11,14 @@ import { UsersService } from "./providers/users.service";
 import { AuthProvider } from "./providers/auth.provider";
 import { User } from "./user.entity";
 import { generateFileName } from "../utils/funcs/filename-generator";
+import { MailModule } from "../mail/mail.module";
 
 @Module({
   controllers: [UsersController],
   providers: [UsersService, AuthProvider],
   exports: [UsersService],
   imports: [
+    MailModule,
     TypeOrmModule.forFeature([User]),
     JwtModule.registerAsync({
       inject: [ConfigService],
