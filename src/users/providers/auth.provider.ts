@@ -39,11 +39,7 @@ export class AuthProvider {
     });
     newUser = await this.userRepository.save(newUser);
 
-    const HOST = this.config.get<string>("HOST")!;
-    const PORT = this.config.get<number>("PORT")!;
     const verificationLink = this.generateVerificationLink(
-      HOST,
-      PORT,
       newUser.id,
       newUser.verificationToken,
     );
@@ -67,15 +63,15 @@ export class AuthProvider {
       throw new BadRequestException("Invalid email or password.");
 
     if (!user.isAccountVerified) {
-      const HOST = this.config.get<string>("HOST");
-      const PORT = this.config.get<number>("PORT");
-
       if (!user.verificationToken) {
         user.verificationToken = randomBytes(32).toString("hex");
         await this.userRepository.save(user);
       }
 
-      const verificationLink = `http://${HOST}:${PORT}/api/users/auth/verify/email/${user.id}/${user.verificationToken}`;
+      const verificationLink = this.generateVerificationLink(
+        user.id,
+        user.verificationToken,
+      );
       await this.mailservice.sendRegisterEmail(email, verificationLink);
       return {
         message:
@@ -113,12 +109,9 @@ export class AuthProvider {
     return await bcrypt.hash(password, salt);
   }
 
-  private generateVerificationLink(
-    host: string,
-    port: number,
-    userId: number,
-    verificationToken: string,
-  ) {
-    return `http://${host}:${port}/api/users/auth/verify/email/${userId}/${verificationToken}`;
+  private generateVerificationLink(userId: number, verificationToken: string) {
+    const HOST = this.config.get<string>("HOST");
+    const PORT = this.config.get<number>("PORT");
+    return `http://${HOST}:${PORT}/api/users/auth/verify/email/${userId}/${verificationToken}`;
   }
 }
