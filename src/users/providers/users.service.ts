@@ -16,8 +16,9 @@ import { User } from "../user.entity";
 import { RegisterUserDto } from "../dtos/register-user.dto";
 import { LoginUserDto } from "../dtos/login-user.dto";
 import { UpdateUserDto } from "../dtos/update-user.dto";
+import { ResetPasswordDto } from "../dtos/reset-password";
 
-import { AccessToken, JWTPayload } from "../../utils/types";
+import { JWTPayload } from "../../utils/types";
 import { TUserRole } from "../../utils/enums";
 
 @Injectable()
@@ -38,6 +39,18 @@ export class UsersService {
 
   public async verifyEmail(userId: number, verificationToken: string) {
     return await this.AuthProvider.verifyEmail(userId, verificationToken);
+  }
+
+  public requestPasswordReset(email: string) {
+    return this.AuthProvider.requestPasswordReset(email);
+  }
+
+  public renderResetPasswordForm(userId: number, resetPasswordToken: string) {
+   return this.AuthProvider.renderResetPasswordForm(userId, resetPasswordToken)
+  }
+
+  public resetPassword(userId: number, resetPasswordToken:string , resetPasswordDto: ResetPasswordDto) {
+    return this.AuthProvider.resetPassword(userId, resetPasswordToken, resetPasswordDto)
   }
 
   public async getProfile(id: number): Promise<User> {

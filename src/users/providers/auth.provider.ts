@@ -9,6 +9,7 @@ import { User } from "../user.entity";
 
 import { RegisterUserDto } from "../dtos/register-user.dto";
 import { LoginUserDto } from "../dtos/login-user.dto";
+import { ResetPasswordDto } from "../dtos/reset-password";
 
 import { MailService } from "../../mail/mail.service";
 import { ConfigService } from "@nestjs/config";
@@ -107,6 +108,84 @@ export class AuthProvider {
   public async hashPassword(password: string) {
     const salt = await bcrypt.genSalt(10);
     return await bcrypt.hash(password, salt);
+  }
+
+  public async requestPasswordReset(email: string) {
+    const user = await this.userRepository.findOne({
+      where: { email },
+    });
+    if (!user) throw new BadRequestException("invalid verification link");
+
+    if (!user.resetPasswordToken) {
+      user.resetPasswordToken = randomBytes(32).toString("hex");
+      await this.userRepository.save(user);
+    }
+
+    const HOST = this.config.get<string>("HOST");
+    const PORT = this.config.get<number>("PORT");
+    const link = `http://${HOST}:${PORT}/api/users/auth/reset-password/${user.id}/${user.resetPasswordToken}`;
+
+    await this.mailservice.sendResetPassword(user.email, link);
+
+    return {
+      message: "An email will be sent to you to reset your password.",
+    };
+  }
+
+  public async renderResetPasswordForm(
+    userId: number,
+    resetPasswordToken: string,
+  ) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+    if (!user) throw new BadRequestException("invalid link");
+
+    if (
+      user.resetPasswordToken === null ||
+      user.resetPasswordToken !== resetPasswordToken
+    ) {
+      throw new BadRequestException("invalid link");
+    }
+
+    return {
+      email: user.email,
+      userId: user.id,
+      resetPasswordToken
+    };
+  }
+
+  public async resetPassword(
+    userId: number,
+    resetPasswordToken: string,
+    resetPasswordDto: ResetPasswordDto,
+  ) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+    if (!user) throw new BadRequestException("invalid credentials");
+
+    if (
+      user.resetPasswordToken === null ||
+      user.resetPasswordToken !== resetPasswordToken
+    ) {
+      throw new BadRequestException("invalid credentials");
+    }
+
+    const { password, confirmPassword } = resetPasswordDto;
+    if (password !== confirmPassword) {
+      throw new BadRequestException(
+        "password and confirm-password fields don''t match",
+      );
+    }
+
+    const hashedPassword = await this.hashPassword(password);
+
+    Object.assign(user, { password: hashedPassword, resetPasswordToken: null });
+
+    await this.userRepository.save(user);
+
+    return "password was reseted successfully.";
   }
 
   private generateVerificationLink(userId: number, verificationToken: string) {

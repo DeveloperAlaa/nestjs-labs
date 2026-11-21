@@ -14,6 +14,7 @@ import {
   UseInterceptors,
   BadRequestException,
   Res,
+  Render,
 } from "@nestjs/common";
 
 import { FileInterceptor } from "@nestjs/platform-express";
@@ -27,6 +28,8 @@ import { UserPayload } from "./decorators/user-payload.decorator";
 import { RegisterUserDto } from "./dtos/register-user.dto";
 import { LoginUserDto } from "./dtos/login-user.dto";
 import { UpdateUserDto } from "./dtos/update-user.dto";
+import { EmailDto } from "./dtos/email.dto";
+import { ResetPasswordDto } from "./dtos/reset-password";
 
 import type { JWTPayload } from "../utils/types";
 import { User } from "./user.entity";
@@ -99,7 +102,6 @@ export class UsersController {
   }
 
   // POST: ~/api/users/profile/image
-
   @Post("/profile/image")
   @UseGuards(AuthGaurd)
   @UseInterceptors(FileInterceptor("profile-image"))
@@ -127,5 +129,35 @@ export class UsersController {
   @UseGuards(AuthGaurd)
   public removeProfileImage(@UserPayload() payload: JWTPayload) {
     return this.usersService.removeProfileImage(payload.id);
+  }
+
+  // POST ~/api/users/auth/reset-password
+  @Post("auth/reset-password")
+  public requestPasswordReset(@Body() {email}: EmailDto) {
+   return this.usersService.requestPasswordReset(email);
+  }
+
+  // POST ~/api/users/auth/reset-password/:userId/:resetPasswordToken
+  @Get("auth/reset-password/:userId/:resetPasswordToken")
+  @Render("reset-password")
+  public async renderResetPasswordForm(
+    @Param("userId", ParseIntPipe) userId: number,
+    @Param("resetPasswordToken") resetPasswordToken: string,
+  ) {
+    return await this.usersService.renderResetPasswordForm(
+      userId,
+      resetPasswordToken,
+    );
+  }
+
+  // GET ~/api/users/auth/reset-password/:userId
+  @Post("auth/reset-password/:userId/:resetPasswordToken")
+  public resetPassword(
+    @Param("userId", ParseIntPipe) userId: number,
+    @Param("resetPasswordToken") resetPasswordToken: string,
+    @Body() resetPasswordDto: ResetPasswordDto
+  ) {
+    console.log(resetPasswordDto)
+    return this.usersService.resetPassword(userId, resetPasswordToken, resetPasswordDto)
   }
 }

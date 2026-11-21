@@ -16,7 +16,27 @@ export class MailService {
           email,
           serverName: "NestJS API",
           date: new Date().toUTCString(),
-          verificationLink
+          verificationLink,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      throw new RequestTimeoutException();
+    }
+  }
+
+  public async sendResetPassword(email: string, link: string) {
+    try {
+      await this.mailerService.sendMail({
+        from: "<no-reply@alaa.com>",
+        to: email,
+        subject: "Reset Password",
+        template: "reset-password",
+        context: {
+          email,
+          link,
+          date: new Date().toUTCString(),
+          serverName: "NestJS API",
         },
       });
     } catch (error) {

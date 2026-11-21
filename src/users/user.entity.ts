@@ -37,6 +37,9 @@ export class User {
 
   @Column({nullable: true, default: null})
   verificationToken!: string 
+
+  @Column({nullable: true, default: null})
+  resetPasswordToken!: string 
  
   @Column({
     name: "user_role",
