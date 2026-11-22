@@ -1,35 +1,32 @@
-import { BadRequestException, Module } from "@nestjs/common";
+import { BadRequestException, forwardRef, Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { ConfigService } from "@nestjs/config";
-import { JwtModule } from "@nestjs/jwt";
+
 import { MulterModule } from "@nestjs/platform-express";
 
 import { diskStorage } from "multer";
 
 import { UsersController } from "./users.controller";
-import { UsersService } from "./providers/users.service";
-import { AuthProvider } from "./providers/auth.provider";
+import { UsersService } from "./users.service";
+
+import { AuthModule } from "../auth/auth.module";
+
 import { User } from "./user.entity";
 import { generateFileName } from "../utils/funcs/filename-generator";
 import { MailModule } from "../mail/mail.module";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { JwtModule } from "@nestjs/jwt";
 
 @Module({
   controllers: [UsersController],
-  providers: [UsersService, AuthProvider],
-  exports: [UsersService],
+  providers: [UsersService],
+  exports: [UsersService, TypeOrmModule],
   imports: [
     MailModule,
+
+    forwardRef(() => AuthModule),
+
     TypeOrmModule.forFeature([User]),
-    JwtModule.registerAsync({
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        global: true,
-        secret: config.get<string>("JWT_SECRET"),
-        signOptions: {
-          expiresIn: config.get("JWT_EXPIRES_IN"),
-        },
-      }),
-    }),
+
     MulterModule.register({
       storage: diskStorage({
         destination: "./images/users",

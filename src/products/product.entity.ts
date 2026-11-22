@@ -8,7 +8,7 @@ import {
   ManyToOne,
 } from "typeorm";
 
-import { CURRENT_TIMESTAMP } from "../utils/constants";
+import { CURRENT_TIMESTAMP } from "../common/constants";
 import { Review } from "../reviews/review.entity";
 import { User } from "../users/user.entity";
 

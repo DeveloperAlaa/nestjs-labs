@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { CURRENT_TIMESTAMP } from "../utils/constants";
+import { CURRENT_TIMESTAMP } from "../common/constants";
 import { Product } from "../products/product.entity";
 import { User } from "../users/user.entity";
 

@@ -5,17 +5,17 @@ import { Repository } from "typeorm";
 import * as bcrypt from "bcryptjs";
 import { randomBytes } from "node:crypto";
 
-import { User } from "../user.entity";
+import { User } from "../users/user.entity";
 
-import { RegisterUserDto } from "../dtos/register-user.dto";
-import { LoginUserDto } from "../dtos/login-user.dto";
-import { ResetPasswordDto } from "../dtos/reset-password";
+import { RegisterUserDto } from "./dtos/register-user.dto"; 
+import { LoginUserDto } from "../users/dtos/login-user.dto";
+import { ResetPasswordDto } from "./dtos/reset-password"; 
 
-import { MailService } from "../../mail/mail.service";
+import { MailService } from "../mail/mail.service";
 import { ConfigService } from "@nestjs/config";
 
 @Injectable()
-export class AuthProvider {
+export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -123,7 +123,7 @@ export class AuthProvider {
 
     const HOST = this.config.get<string>("HOST");
     const PORT = this.config.get<number>("PORT");
-    const link = `http://${HOST}:${PORT}/api/users/auth/reset-password/${user.id}/${user.resetPasswordToken}`;
+    const link = `http://${HOST}:${PORT}/api/auth/reset-password/${user.id}/${user.resetPasswordToken}`;
 
     await this.mailservice.sendResetPassword(user.email, link);
 
@@ -151,7 +151,7 @@ export class AuthProvider {
     return {
       email: user.email,
       userId: user.id,
-      resetPasswordToken
+      resetPasswordToken,
     };
   }
 
@@ -191,6 +191,6 @@ export class AuthProvider {
   private generateVerificationLink(userId: number, verificationToken: string) {
     const HOST = this.config.get<string>("HOST");
     const PORT = this.config.get<number>("PORT");
-    return `http://${HOST}:${PORT}/api/users/auth/verify/email/${userId}/${verificationToken}`;
+    return `http://${HOST}:${PORT}/api/auth/verify-email/${userId}/${verificationToken}`;
   }
 }

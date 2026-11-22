@@ -4,54 +4,29 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
+
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
 import { join } from "node:path";
 import { unlinkSync } from "node:fs";
 
-import { AuthProvider } from "./auth.provider";
-import { User } from "../user.entity";
+import { User } from "../users/user.entity";
 
-import { RegisterUserDto } from "../dtos/register-user.dto";
-import { LoginUserDto } from "../dtos/login-user.dto";
-import { UpdateUserDto } from "../dtos/update-user.dto";
-import { ResetPasswordDto } from "../dtos/reset-password";
+import { AuthService } from "../auth/auth.service";
 
-import { JWTPayload } from "../../utils/types";
-import { TUserRole } from "../../utils/enums";
+import { UpdateUserDto } from "./dtos/update-user.dto";
+
+import { JWTPayload } from "../common/types";
+import { TUserRole } from "../common/enums";
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    private readonly AuthProvider: AuthProvider,
+    private readonly authService: AuthService,
   ) {}
-
-  public async register(dto: RegisterUserDto) {
-    return this.AuthProvider.register(dto);
-  }
-
-  public async login(dto: LoginUserDto) {
-    return this.AuthProvider.login(dto);
-  }
-
-  public async verifyEmail(userId: number, verificationToken: string) {
-    return await this.AuthProvider.verifyEmail(userId, verificationToken);
-  }
-
-  public requestPasswordReset(email: string) {
-    return this.AuthProvider.requestPasswordReset(email);
-  }
-
-  public renderResetPasswordForm(userId: number, resetPasswordToken: string) {
-   return this.AuthProvider.renderResetPasswordForm(userId, resetPasswordToken)
-  }
-
-  public resetPassword(userId: number, resetPasswordToken:string , resetPasswordDto: ResetPasswordDto) {
-    return this.AuthProvider.resetPassword(userId, resetPasswordToken, resetPasswordDto)
-  }
 
   public async getProfile(id: number): Promise<User> {
     const user = await this.userRepository.findOne({ where: { id } });
@@ -71,7 +46,7 @@ export class UsersService {
     user.username = username ?? user.username;
 
     if (password) {
-      user.password = await this.AuthProvider.hashPassword(password);
+      user.password = await this.authService.hashPassword(password);
     }
     return await this.userRepository.save(user);
   }

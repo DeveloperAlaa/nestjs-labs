@@ -9,8 +9,8 @@ import {
 
 import { Exclude } from "class-transformer";
 
-import { TUserRole } from "../utils/enums";
-import { CURRENT_TIMESTAMP } from "../utils/constants";
+import { TUserRole } from "../common/enums";
+import { CURRENT_TIMESTAMP } from "../common/constants";
 import { Product } from "../products/product.entity";
 import { Review } from "../reviews/review.entity";
 

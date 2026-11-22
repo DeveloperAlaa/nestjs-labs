@@ -23,19 +23,19 @@ import { diskStorage } from "multer";
 
 import type { Express, Response } from "express";
 
+import { ProductsService } from "./products.service";
+
 import { CreateProductDTO } from "./dtos/create-product.dto";
 import { UpdateProductDTO } from "./dtos/update-product.dto";
 
-import { ProductsService } from "./products.service";
+import { AuthRoleGaurd } from "../auth/guards/auth-role.guard";
+import { AuthGaurd } from "../auth/guards/auth.guard";
 
-import { AuthRoleGaurd } from "../users/guards/auth-role.guard";
-import { AuthGaurd } from "../users/guards/auth.guard";
+import { UserRole } from "../auth/decorators/user-role.decorator";
+import { UserPayload } from "../auth/decorators/user-payload.decorator";
 
-import { UserRole } from "../users/decorators/user-role.decorator";
-import { UserPayload } from "../users/decorators/user-payload.decorator";
-
-import type { JWTPayload } from "../utils/types";
-import { TUserRole } from "../utils/enums";
+import type { JWTPayload } from "../common/types";
+import { TUserRole } from "../common/enums";
 import { generateFileName } from "../utils/funcs/filename-generator";
 
 @Controller("/api/products")

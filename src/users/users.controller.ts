@@ -2,8 +2,6 @@ import {
   Controller,
   Post,
   Body,
-  HttpCode,
-  HttpStatus,
   Get,
   UseGuards,
   Patch,
@@ -14,54 +12,30 @@ import {
   UseInterceptors,
   BadRequestException,
   Res,
-  Render,
 } from "@nestjs/common";
 
 import { FileInterceptor } from "@nestjs/platform-express";
 
 import type { Express, Response } from "express";
 
-import { UsersService } from "./providers/users.service";
-import { AuthGaurd } from "./guards/auth.guard";
-import { UserPayload } from "./decorators/user-payload.decorator";
+import { UsersService } from "./users.service";
 
-import { RegisterUserDto } from "./dtos/register-user.dto";
-import { LoginUserDto } from "./dtos/login-user.dto";
 import { UpdateUserDto } from "./dtos/update-user.dto";
-import { EmailDto } from "./dtos/email.dto";
-import { ResetPasswordDto } from "./dtos/reset-password";
 
-import type { JWTPayload } from "../utils/types";
+import { AuthGaurd } from "../auth/guards/auth.guard";
+import { AuthRoleGaurd } from "../auth/guards/auth-role.guard";
+
+import { UserPayload } from "../auth/decorators/user-payload.decorator";
+
+
+import type { JWTPayload } from "../common/types";
 import { User } from "./user.entity";
-import { AuthRoleGaurd } from "./guards/auth-role.guard";
-import { UserRole } from "./decorators/user-role.decorator";
-import { TUserRole } from "../utils/enums";
+import { UserRole } from "../auth/decorators/user-role.decorator";
+import { TUserRole } from "../common/enums";
 
 @Controller("/api/users")
 export class UsersController {
   constructor(private usersService: UsersService) {}
-
-  // POST: ~/api/users/auth/register
-  @Post("auth/register")
-  public async register(@Body() dto: RegisterUserDto) {
-    return await this.usersService.register(dto);
-  }
-
-  // POST: ~/api/users/auth/login
-  @HttpCode(HttpStatus.OK)
-  @Post("auth/login")
-  public async login(@Body() dto: LoginUserDto) {
-    return await this.usersService.login(dto);
-  }
-
-  // GET: ~/api/users/auth/verify/email/:userId/:verificationToken
-  @Get("auth/verify/email/:userId/:verificationToken")
-  public async verifyEmail(
-    @Param("userId", ParseIntPipe) userId: number,
-    @Param("verificationToken") verificationToken: string,
-  ) {
-    return this.usersService.verifyEmail(userId, verificationToken);
-  }
 
   // GET: ~/api/users/profile
   // @UseInterceptors(PasswordInterceptor)
@@ -90,7 +64,7 @@ export class UsersController {
     return this.usersService.update(payload.id, dto);
   }
 
-  // DELETE: ~/api/users
+  // DELETE: ~/api/users/:id
   @Delete(":id")
   @UserRole(TUserRole.Admin, TUserRole.User)
   @UseGuards(AuthRoleGaurd)
@@ -129,35 +103,5 @@ export class UsersController {
   @UseGuards(AuthGaurd)
   public removeProfileImage(@UserPayload() payload: JWTPayload) {
     return this.usersService.removeProfileImage(payload.id);
-  }
-
-  // POST ~/api/users/auth/reset-password
-  @Post("auth/reset-password")
-  public requestPasswordReset(@Body() {email}: EmailDto) {
-   return this.usersService.requestPasswordReset(email);
-  }
-
-  // POST ~/api/users/auth/reset-password/:userId/:resetPasswordToken
-  @Get("auth/reset-password/:userId/:resetPasswordToken")
-  @Render("reset-password")
-  public async renderResetPasswordForm(
-    @Param("userId", ParseIntPipe) userId: number,
-    @Param("resetPasswordToken") resetPasswordToken: string,
-  ) {
-    return await this.usersService.renderResetPasswordForm(
-      userId,
-      resetPasswordToken,
-    );
-  }
-
-  // GET ~/api/users/auth/reset-password/:userId
-  @Post("auth/reset-password/:userId/:resetPasswordToken")
-  public resetPassword(
-    @Param("userId", ParseIntPipe) userId: number,
-    @Param("resetPasswordToken") resetPasswordToken: string,
-    @Body() resetPasswordDto: ResetPasswordDto
-  ) {
-    console.log(resetPasswordDto)
-    return this.usersService.resetPassword(userId, resetPasswordToken, resetPasswordDto)
   }
 }

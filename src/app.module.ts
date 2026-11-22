@@ -3,21 +3,25 @@ import { APP_INTERCEPTOR } from "@nestjs/core";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
+import { AuthModule } from "./auth/auth.module";
 import { ProductsModule } from "./products/products.module";
 import { UsersModule } from "./users/users.module";
 import { ReviewsModule } from "./reviews/reviews.module";
+import { MailModule } from "./mail/mail.module";
 
 import { Product } from "./products/product.entity";
 import { User } from "./users/user.entity";
 import { Review } from "./reviews/review.entity";
-import { MailModule } from "./mail/mail.module";
+import { JwtConfigModule } from "./infrastructure/jwt/jwt.module";
 
 @Module({
   imports: [
+    AuthModule,
     ProductsModule,
     UsersModule,
     ReviewsModule,
     MailModule,
+    JwtConfigModule,
     // enviroment variables module
     ConfigModule.forRoot({
       isGlobal: true,
@@ -46,8 +50,8 @@ import { MailModule } from "./mail/mail.module";
   providers: [
     {
       provide: APP_INTERCEPTOR,
-      useClass: ClassSerializerInterceptor
-    }
-  ]
+      useClass: ClassSerializerInterceptor,
+    },
+  ],
 })
 export class AppModule {}

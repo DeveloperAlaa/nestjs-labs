@@ -13,11 +13,11 @@ import { Review } from "./review.entity";
 import { CreateReviewDto } from "./dtos/create-review.dto";
 import { UpdateReviewDto } from "./dtos/update-review.dto";
 
-import { UsersService } from "../users/providers/users.service";
+import { UsersService } from "../users/users.service";
 import { ProductsService } from "../products/products.service";
 
-import { TUserRole } from "../utils/enums";
-import { JWTPayload } from "../utils/types";
+import { TUserRole } from "../common/enums";
+import { JWTPayload } from "../common/types";
 
 @Injectable()
 export class ReviewsService {

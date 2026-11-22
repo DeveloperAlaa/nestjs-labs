@@ -8,9 +8,9 @@ import { ConfigService } from "@nestjs/config";
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 import { Request } from "express";
-import { TUserRole } from "../../utils/enums";
-import { JWTPayload } from "../../utils/types";
-import { UsersService } from "../providers/users.service";
+import { TUserRole } from "../../common/enums";
+import { JWTPayload } from "../../common/types";
+import { UsersService } from "../../users/users.service";
 
 @Injectable()
 export class AuthRoleGaurd implements CanActivate {

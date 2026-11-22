@@ -12,7 +12,7 @@ import { CreateProductDTO } from "./dtos/create-product.dto";
 import { UpdateProductDTO } from "./dtos/update-product.dto";
 import { Product } from "./product.entity";
 import { InjectRepository } from "@nestjs/typeorm";
-import { UsersService } from "../users/providers/users.service";
+import { UsersService } from "../users/users.service";
 
 @Injectable()
 export class ProductsService {
