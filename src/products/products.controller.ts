@@ -38,11 +38,24 @@ import type { JWTPayload } from "../common/types";
 import { TUserRole } from "../common/enums";
 import { generateFileName } from "../utils/funcs/filename-generator";
 
+// swagger documentation
+import {
+  ApiTags,
+  ApiQuery,
+  ApiConsumes,
+  ApiBody,
+  ApiBearerAuth,
+} from "@nestjs/swagger";
+
+@ApiTags("Products Routes")
 @Controller("/api/products")
 export class ProductsController {
   constructor(private readonly productService: ProductsService) {}
 
   // GET ~/api/products
+  @ApiQuery({ name: "title", type: "string", required: false })
+  @ApiQuery({ name: "minPrice", type: "number", required: false })
+  @ApiQuery({ name: "maxPrice", type: "number", required: false })
   @Get()
   public async getAllProducts(
     @Query("title") title: string,
@@ -59,9 +72,10 @@ export class ProductsController {
   }
 
   // POST ~/api/products
-  @Post()
+  @ApiBearerAuth()
   @UserRole(TUserRole.Admin)
   @UseGuards(AuthRoleGaurd)
+  @Post()
   public async createProduct(
     @Body() dto: CreateProductDTO,
     @UserPayload() payload: JWTPayload,
@@ -70,6 +84,7 @@ export class ProductsController {
   }
 
   // PATCH ~/api/products/:id
+  @ApiBearerAuth()
   @UserRole(TUserRole.Admin)
   @UseGuards(AuthRoleGaurd)
   @Patch(":id")
@@ -82,6 +97,7 @@ export class ProductsController {
   }
 
   // DELET ~/api/products/:id
+  @ApiBearerAuth()
   @UserRole(TUserRole.Admin)
   @UseGuards(AuthRoleGaurd)
   @Delete(":id")
@@ -90,7 +106,19 @@ export class ProductsController {
   }
 
   // POST ~/api/products/:productId/images/primary
-  @Post(":productId/images/primary")
+  @ApiBearerAuth()
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({
+    schema: {
+      type: "object",
+      properties: {
+        "primary-image": {
+          type: "string",
+          format: "binary",
+        },
+      },
+    },
+  })
   @UseGuards(AuthGaurd)
   @UseInterceptors(
     FileInterceptor("primary-image", {
@@ -113,6 +141,7 @@ export class ProductsController {
       limits: { fileSize: 1024 * 1024 * 4 },
     }),
   )
+  @Post(":productId/images/primary")
   public async addPrimaryImage(
     @UserPayload() payload: JWTPayload,
     @Param("productId") productId: number,
@@ -127,8 +156,9 @@ export class ProductsController {
   }
 
   // GET ~/api/products/:productId/images/primary
-  @Get(":productId/images/primary")
+  @ApiBearerAuth()
   @UseGuards(AuthGaurd)
+  @Get(":productId/images/primary")
   public async getPrimaryImage(
     @Param("productId", ParseIntPipe) productId: number,
     @UserPayload() payload: JWTPayload,
@@ -145,7 +175,24 @@ export class ProductsController {
   }
 
   // POST ~/api/products/:productId/images/secondary
-  @Post(":productId/images/secondary")
+  @ApiBearerAuth()
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({
+    schema: {
+      type: "object",
+      properties: {
+        "secondary-image": {
+          type: "array",
+          items: {
+            type: "string",
+            format: "binary",
+          },
+          minItems: 2,
+          maxItems: 4,
+        },
+      },
+    },
+  })
   @UseGuards(AuthGaurd)
   @UseInterceptors(
     FilesInterceptor("secondary-image", 5, {
@@ -168,6 +215,7 @@ export class ProductsController {
       limits: { fileSize: 1024 * 1024 * 4 },
     }),
   )
+  @Post(":productId/images/secondary")
   public async addSecondaryImages(
     @UserPayload() payload: JWTPayload,
     @Param("productId") productId: number,
@@ -188,8 +236,9 @@ export class ProductsController {
   }
 
   // POST ~/api/products/:productId/images/secondary
-  @Get(":productId/images/secondary/:imageNumber")
+  @ApiBearerAuth()
   @UseGuards(AuthGaurd)
+  @Get(":productId/images/secondary/:imageNumber")
   public async getSecondaryImages(
     @Param("productId") productId: number,
     @Param("imageNumber", ParseIntPipe) imageNumber: number,

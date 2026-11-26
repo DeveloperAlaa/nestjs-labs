@@ -27,36 +27,39 @@ import { AuthRoleGaurd } from "../auth/guards/auth-role.guard";
 
 import { UserPayload } from "../auth/decorators/user-payload.decorator";
 
-
 import type { JWTPayload } from "../common/types";
 import { User } from "./user.entity";
 import { UserRole } from "../auth/decorators/user-role.decorator";
 import { TUserRole } from "../common/enums";
+
+import { ApiBearerAuth } from "@nestjs/swagger";
 
 @Controller("/api/users")
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
   // GET: ~/api/users/profile
-  // @UseInterceptors(PasswordInterceptor)
-  @Get("profile")
+  @ApiBearerAuth()
   @UseGuards(AuthGaurd)
+  @Get("profile")
   public async getProfile(@UserPayload() payload: JWTPayload): Promise<User> {
     return await this.usersService.getProfile(payload.id);
   }
 
   // GET: ~/api/users/
-  @Get()
+  @ApiBearerAuth()
   @UserRole(TUserRole.Admin)
   @UseGuards(AuthRoleGaurd)
+  @Get()
   public getAllUsers(): Promise<Omit<User, "password">[]> {
     return this.usersService.getAll();
   }
 
   // PATCH: ~/api/users
-  @Patch()
+  @ApiBearerAuth()
   @UserRole(TUserRole.Admin, TUserRole.User)
   @UseGuards(AuthRoleGaurd)
+  @Patch()
   public updateUser(
     @Body() dto: UpdateUserDto,
     @UserPayload() payload: JWTPayload,
@@ -65,9 +68,10 @@ export class UsersController {
   }
 
   // DELETE: ~/api/users/:id
-  @Delete(":id")
+  @ApiBearerAuth()
   @UserRole(TUserRole.Admin, TUserRole.User)
   @UseGuards(AuthRoleGaurd)
+  @Delete(":id")
   public deleteUser(
     @Param("id", ParseIntPipe) id: number,
     @UserPayload() payload: JWTPayload,
@@ -76,9 +80,10 @@ export class UsersController {
   }
 
   // POST: ~/api/users/profile/image
-  @Post("/profile/image")
+  @ApiBearerAuth()
   @UseGuards(AuthGaurd)
   @UseInterceptors(FileInterceptor("profile-image"))
+  @Post("/profile/image")
   public addProfileImage(
     @UserPayload() payload: JWTPayload,
     @UploadedFile() imageFile: Express.Multer.File,
@@ -88,8 +93,9 @@ export class UsersController {
   }
 
   // GET: ~/api/users/profile/image
-  @Get("profile/image")
+  @ApiBearerAuth()
   @UseGuards(AuthGaurd)
+  @Get("profile/image")
   public async getProfileImage(
     @UserPayload() payload: JWTPayload,
     @Res() res: Response,
@@ -99,8 +105,9 @@ export class UsersController {
   }
 
   // DELETE: ~/api/users/profile/image
-  @Delete("profile/image")
+  @ApiBearerAuth()
   @UseGuards(AuthGaurd)
+  @Delete("profile/image")
   public removeProfileImage(@UserPayload() payload: JWTPayload) {
     return this.usersService.removeProfileImage(payload.id);
   }

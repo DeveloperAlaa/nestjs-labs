@@ -24,13 +24,18 @@ import { TUserRole } from "../common/enums";
 import { UserPayload } from "../auth/decorators/user-payload.decorator";
 import type { JWTPayload } from "../common/types";
 
+// swagger documentation
+import { ApiBearerAuth } from "@nestjs/swagger";
+
 @Controller("/api/reviews")
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
 
-  @Post(":productId")
+  // GET ~/api/reviews/:id
+  @ApiBearerAuth()
   @UserRole(TUserRole.Admin, TUserRole.User)
   @UseGuards(AuthRoleGaurd)
+  @Post(":productId")
   public async createReview(
     @Body() body: CreateReviewDto,
     @Param("productId", ParseIntPipe) productId: number,
@@ -39,9 +44,11 @@ export class ReviewsController {
     return await this.reviewsService.create(productId, payload.id, body);
   }
 
-  @Get()
+  // GET ~/api/reviews/
+  @ApiBearerAuth()
   @UserRole(TUserRole.Admin)
   @UseGuards(AuthRoleGaurd)
+  @Get()
   public getAllReviews(
     @Query("page", ParseIntPipe) page: number,
     @Query("limit", ParseIntPipe) limit: number,
@@ -49,8 +56,10 @@ export class ReviewsController {
     return this.reviewsService.getAll(page, limit);
   }
 
-  @Patch(":reviewId")
+  // PATCH ~/api/reviews/:reviewId
+  @ApiBearerAuth()
   @UseGuards(AuthGaurd)
+  @Patch(":reviewId")
   public updateReview(
     @Body() dto: UpdateReviewDto,
     @Param("reviewId", ParseIntPipe) reviewId: number,
@@ -59,9 +68,11 @@ export class ReviewsController {
     return this.reviewsService.update(reviewId, payload.id, dto);
   }
 
-  @Delete(":reviewId")
+  // DELETE ~/api/reviews/:reviewId
+  @ApiBearerAuth()
   @UserRole(TUserRole.Admin, TUserRole.User)
   @UseGuards(AuthRoleGaurd)
+  @Delete(":reviewId")
   public deleteReview(
     @Param("reviewId", ParseIntPipe) reviewId: number,
     @UserPayload() payload: JWTPayload,
