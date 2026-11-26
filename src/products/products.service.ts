@@ -103,7 +103,7 @@ export class ProductsService {
   public async addSecondaryImages(
     productId: number,
     userId: number,
-    files: Record<string, string>,
+    files: Array<Express.Multer.File>,
   ) {
     const product = await this.getOneBy(productId);
 
@@ -111,22 +111,20 @@ export class ProductsService {
       throw new UnauthorizedException("access denied, not allowd");
 
     if (product.secondaryImages) {
-      const oldFiles: string[][] = Object.entries(
-        JSON.parse(product.secondaryImages),
-      );
-
-      for (let i = 0; i < oldFiles.length; i++) {
+      for (let fileName of product.secondaryImages) {
         const oldImagePath = join(
           process.cwd(),
           "./images/products/secondary",
-          oldFiles[i][1],
+          fileName,
         );
-
         unlinkSync(oldImagePath);
       }
+
+      product.secondaryImages = [];
     }
 
-    product.secondaryImages = JSON.stringify(files);
+    product.secondaryImages = files.map((file) => file.filename);
+
     return await this.productsRepositry.save(product);
   }
 }

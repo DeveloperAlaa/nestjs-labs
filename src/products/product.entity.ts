@@ -29,8 +29,8 @@ export class Product {
   @Column({ nullable: true })
   primaryImage!: string;
 
-  @Column({ type: "json", nullable: true })
-  secondaryImages!: string;
+  @Column({ type: "text", array: true, default: [], nullable: true })
+  secondaryImages!: string[];
 
   @CreateDateColumn({
     name: "created_at",

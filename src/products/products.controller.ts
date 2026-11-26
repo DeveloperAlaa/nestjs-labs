@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   ParseIntPipe,
   Patch,
@@ -224,18 +225,14 @@ export class ProductsController {
     if (!secondaryImages || secondaryImages.length === 0)
       throw new BadRequestException("no images were provided");
 
-    const files = Object.fromEntries(
-      secondaryImages.map((file, index) => [`file${index + 1}`, file.filename]),
-    );
-
     return await this.productService.addSecondaryImages(
       productId,
       payload.id,
-      files,
+      secondaryImages,
     );
   }
 
-  // POST ~/api/products/:productId/images/secondary
+  // GET ~/api/products/:productId/images/secondary
   @ApiBearerAuth()
   @UseGuards(AuthGaurd)
   @Get(":productId/images/secondary/:imageNumber")
@@ -254,11 +251,12 @@ export class ProductsController {
     if (product.user.id !== payload.id)
       throw new UnauthorizedException("access denied, not allowd");
 
-    const secondaryImages: string[][] = Object.entries(
-      JSON.parse(product.secondaryImages),
-    );
-    res.sendFile(secondaryImages[imageNumber - 1][1], {
-      root: "./images/products/secondary",
-    });
+    try {
+      res.sendFile(product.secondaryImages[imageNumber - 1], {
+        root: "./images/products/secondary",
+      });
+    } catch (error) {
+      throw new NotFoundException("image not found")
+    }
   }
 }
