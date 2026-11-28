@@ -63,9 +63,20 @@ import { LoggerMiddleware } from "./common/middlewares/logger.middleware";
 })
 export class AppModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(LoggerMiddleware)
+      .exclude({
+        path: "api/products",
+        method: RequestMethod.DELETE,
+      })
+      .forRoutes({
+        path: "api/products",
+        method: RequestMethod.ALL,
+      });
+
     consumer.apply(LoggerMiddleware).forRoutes({
-      path: "api/products",
-      method: RequestMethod.ALL,
+      path: "api/users",
+      method: RequestMethod.POST,
     });
   }
 }
