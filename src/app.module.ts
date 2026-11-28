@@ -1,4 +1,10 @@
-import { ClassSerializerInterceptor, Module } from "@nestjs/common";
+import {
+  ClassSerializerInterceptor,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from "@nestjs/common";
 import { APP_INTERCEPTOR } from "@nestjs/core";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
@@ -13,6 +19,7 @@ import { Product } from "./products/product.entity";
 import { User } from "./users/user.entity";
 import { Review } from "./reviews/review.entity";
 import { JwtConfigModule } from "./infrastructure/jwt/jwt.module";
+import { LoggerMiddleware } from "./common/middlewares/logger.middleware";
 
 @Module({
   imports: [
@@ -54,4 +61,11 @@ import { JwtConfigModule } from "./infrastructure/jwt/jwt.module";
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  public configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes({
+      path: "api/products",
+      method: RequestMethod.ALL,
+    });
+  }
+}
