@@ -39,6 +39,8 @@ import type { JWTPayload } from "../common/types";
 import { TUserRole } from "../common/enums";
 import { generateFileName } from "../utils/funcs/filename-generator";
 
+import { SkipThrottle } from "@nestjs/throttler";
+
 // swagger documentation
 import {
   ApiTags,
@@ -256,7 +258,7 @@ export class ProductsController {
         root: "./images/products/secondary",
       });
     } catch (error) {
-      throw new NotFoundException("image not found")
+      throw new NotFoundException("image not found");
     }
   }
 }

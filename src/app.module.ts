@@ -5,9 +5,10 @@ import {
   NestModule,
   RequestMethod,
 } from "@nestjs/common";
-import { APP_INTERCEPTOR } from "@nestjs/core";
+import { APP_GUARD, APP_INTERCEPTOR } from "@nestjs/core";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 
 import { AuthModule } from "./auth/auth.module";
 import { ProductsModule } from "./products/products.module";
@@ -34,6 +35,23 @@ import { LoggerMiddleware } from "./common/middlewares/logger.middleware";
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
+    ThrottlerModule.forRoot([
+      {
+        name: "short",
+        ttl: 1000,
+        limit: 3,
+      },
+      {
+        name: "medium",
+        ttl: 10000,
+        limit: 10,
+      },
+      {
+        name: "long",
+        ttl: 60000,
+        limit: 20,
+      },
+    ]),
 
     // these are going to be enviromental variables
     TypeOrmModule.forRootAsync({
@@ -58,6 +76,10 @@ import { LoggerMiddleware } from "./common/middlewares/logger.middleware";
     {
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
   ],
 })
