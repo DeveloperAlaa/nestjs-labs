@@ -1,6 +1,9 @@
 import { NestFactory } from "@nestjs/core";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { ValidationPipe } from "@nestjs/common";
+
+import helmet from "helmet"
+
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
 import { AppModule } from "./app.module";
@@ -12,6 +15,9 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
   );
+
+  // api response headers security
+  app.use(helmet())
 
   // template engine
   app.setBaseViewsDir(join(__dirname, "..", "views"));
